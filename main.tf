@@ -1,7 +1,7 @@
 locals {
   tags = merge(var.tenx_streamer_user_supplied_tags, {
     terraform-module         = "tenx-streamer-infra"
-    terraform-module-version = "v0.1.1"
+    terraform-module-version = "v0.2.0"
     managed-by               = "tenx-terraform"
   })
 

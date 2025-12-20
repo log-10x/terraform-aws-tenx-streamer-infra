@@ -1,16 +1,16 @@
 # SQS Queue URLs - used by application configuration
 output "index_queue_url" {
-  description = "The URL of the index SQS queue (for tenx.quarkus.sqs.index.queue.url)"
+  description = "The URL of the index SQS queue (for tenx.quarkus.index.queue.url)"
   value       = aws_sqs_queue.tenx_index_queue.url
 }
 
 output "query_queue_url" {
-  description = "The URL of the query SQS queue (for tenx.quarkus.sqs.query.queue.url)"
+  description = "The URL of the query SQS queue (for tenx.quarkus.query.queue.url)"
   value       = aws_sqs_queue.tenx_query_queue.url
 }
 
 output "pipeline_queue_url" {
-  description = "The URL of the pipeline SQS queue (for tenx.quarkus.sqs.pipeline.queue.url)"
+  description = "The URL of the pipeline SQS queue (for tenx.quarkus.pipeline.queue.url)"
   value       = aws_sqs_queue.tenx_pipeline_queue.url
 }
 
@@ -26,6 +26,6 @@ output "index_results_bucket_name" {
 }
 
 output "index_write_container" {
-  description = "The full path for indexing results (bucket + path) - used for tenx.quarkus.sqs.index.write.container"
+  description = "The full path for indexing results (bucket + path) - used for tenx.quarkus.index.write.container"
   value       = local.index_write_container
 }

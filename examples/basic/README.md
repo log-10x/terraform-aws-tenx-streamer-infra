@@ -24,10 +24,10 @@ terraform apply
 After applying, use the output values to configure your run-quarkus application:
 
 ```bash
-export TENX_QUARKUS_SQS_INDEX_QUEUE_URL=$(terraform output -raw index_queue_url)
-export TENX_QUARKUS_SQS_QUERY_QUEUE_URL=$(terraform output -raw query_queue_url)
-export TENX_QUARKUS_SQS_PIPELINE_QUEUE_URL=$(terraform output -raw pipeline_queue_url)
-export TENX_QUARKUS_SQS_INDEX_WRITE_CONTAINER=$(terraform output -raw index_write_container)
+export TENX_QUARKUS_INDEX_QUEUE_URL=$(terraform output -raw index_queue_url)
+export TENX_QUARKUS_QUERY_QUEUE_URL=$(terraform output -raw query_queue_url)
+export TENX_QUARKUS_PIPELINE_QUEUE_URL=$(terraform output -raw pipeline_queue_url)
+export TENX_QUARKUS_INDEX_WRITE_CONTAINER=$(terraform output -raw index_write_container)
 ```
 
 ## Testing S3 Indexing

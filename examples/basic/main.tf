@@ -32,21 +32,21 @@ module "tenx_streamer_infra" {
 
 # Outputs for Quarkus application configuration
 output "index_queue_url" {
-  description = "Use this for TENX_QUARKUS_SQS_INDEX_QUEUE_URL"
+  description = "Use this for TENX_QUARKUS_INDEX_QUEUE_URL"
   value       = module.tenx_streamer_infra.index_queue_url
 }
 
 output "query_queue_url" {
-  description = "Use this for TENX_QUARKUS_SQS_QUERY_QUEUE_URL"
+  description = "Use this for TENX_QUARKUS_QUERY_QUEUE_URL"
   value       = module.tenx_streamer_infra.query_queue_url
 }
 
 output "pipeline_queue_url" {
-  description = "Use this for TENX_QUARKUS_SQS_PIPELINE_QUEUE_URL"
+  description = "Use this for TENX_QUARKUS_PIPELINE_QUEUE_URL"
   value       = module.tenx_streamer_infra.pipeline_queue_url
 }
 
 output "index_write_container" {
-  description = "Use this for TENX_QUARKUS_SQS_INDEX_WRITE_CONTAINER"
+  description = "Use this for TENX_QUARKUS_INDEX_WRITE_CONTAINER"
   value       = module.tenx_streamer_infra.index_write_container
 }
