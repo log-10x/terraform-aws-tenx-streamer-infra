@@ -70,12 +70,12 @@ The module provides the following outputs for application configuration:
 
 | Name                        | Description                                                      | Used For |
 |-----------------------------|------------------------------------------------------------------|----------|
-| `index_queue_url`           | Full URL of the index SQS queue                                  | `tenx.quarkus.sqs.index.queue.url` |
-| `query_queue_url`           | Full URL of the query SQS queue                                  | `tenx.quarkus.sqs.query.queue.url` |
-| `pipeline_queue_url`        | Full URL of the pipeline SQS queue                               | `tenx.quarkus.sqs.pipeline.queue.url` |
+| `index_queue_url`           | Full URL of the index SQS queue                                  | `tenx.quarkus.index.queue.url` |
+| `query_queue_url`           | Full URL of the query SQS queue                                  | `tenx.quarkus.query.queue.url` |
+| `pipeline_queue_url`        | Full URL of the pipeline SQS queue                               | `tenx.quarkus.pipeline.queue.url` |
 | `index_source_bucket_name`  | Name of the S3 bucket for source files to be indexed            | Reference/Documentation |
 | `index_results_bucket_name` | Name of the S3 bucket for indexing results                       | Reference/Documentation |
-| `index_write_container`     | Full path for indexing results (bucket + path)                   | `tenx.quarkus.sqs.index.write.container` |
+| `index_write_container`     | Full path for indexing results (bucket + path)                   | `tenx.quarkus.index.write.container` |
 
 ## Example Configuration
 
@@ -131,9 +131,9 @@ module "tenx-streamer-infra" {
 - Queue names default to match the LocalStack development setup: `my-index-queue`, `my-query-queue`, `my-pipeline-queue`.
 - All three queues share the same configuration parameters (visibility timeout, retention, etc.) by design.
 - The queue URLs should be configured in the run-quarkus application using environment variables:
-  - `TENX_QUARKUS_SQS_INDEX_QUEUE_URL`
-  - `TENX_QUARKUS_SQS_QUERY_QUEUE_URL`
-  - `TENX_QUARKUS_SQS_PIPELINE_QUEUE_URL`
+  - `TENX_QUARKUS_INDEX_QUEUE_URL`
+  - `TENX_QUARKUS_QUERY_QUEUE_URL`
+  - `TENX_QUARKUS_PIPELINE_QUEUE_URL`
 
 ### S3 Indexing Workflow
 
@@ -157,11 +157,11 @@ When a file is uploaded to the source bucket (e.g., `s3://my-tenx-index-bucket/a
    - `indexObjectStorageName`: "AWS" (hardcoded)
    - `indexReadContainer`: Extracted from S3 event bucket name
    - `indexReadObject`: Extracted from S3 event object key
-   - `indexWriteContainer`: From config property `tenx.quarkus.sqs.index.write.container`, or defaults to `{source-bucket}/tenx-index`
+   - `indexWriteContainer`: From config property `tenx.quarkus.index.write.container`, or defaults to `{source-bucket}/tenx-index`
 5. Indexing proceeds and results are written to the configured write container path
 
 **Quarkus Configuration:**
-Set the `tenx.quarkus.sqs.index.write.container` property to specify where indexing results should be written. If not set, results will be written to `{source-bucket}/tenx-index`.
+Set the `tenx.quarkus.index.write.container` property to specify where indexing results should be written. If not set, results will be written to `{source-bucket}/tenx-index`.
 
 ### Bucket Configuration Options
 
