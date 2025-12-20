@@ -34,10 +34,10 @@ terraform apply
 
 ```bash
 # Export all queue URLs
-export TENX_QUARKUS_SQS_INDEX_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.index')
-export TENX_QUARKUS_SQS_QUERY_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.query')
-export TENX_QUARKUS_SQS_PIPELINE_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.pipeline')
-export TENX_QUARKUS_SQS_INDEX_WRITE_CONTAINER=$(terraform output -raw index_write_container)
+export TENX_QUARKUS_INDEX_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.index')
+export TENX_QUARKUS_QUERY_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.query')
+export TENX_QUARKUS_PIPELINE_QUEUE_URL=$(terraform output -raw queue_urls | jq -r '.pipeline')
+export TENX_QUARKUS_INDEX_WRITE_CONTAINER=$(terraform output -raw index_write_container)
 ```
 
 ## Testing S3 Indexing
