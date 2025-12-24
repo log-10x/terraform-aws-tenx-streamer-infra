@@ -22,12 +22,12 @@ output "stream_queue_url" {
 # S3 Bucket Names - used for application configuration and reference
 output "index_source_bucket_name" {
   description = "The name of the S3 bucket for source files to be indexed"
-  value       = var.tenx_streamer_create_index_source_bucket ? aws_s3_bucket.index_source[0].id : var.tenx_streamer_index_source_bucket_name
+  value       = var.tenx_streamer_index_source_bucket_name
 }
 
 output "index_results_bucket_name" {
   description = "The name of the S3 bucket for indexing results"
-  value       = var.tenx_streamer_create_index_results_bucket && !local.buckets_are_same ? aws_s3_bucket.index_results[0].id : var.tenx_streamer_index_results_bucket_name
+  value       = var.tenx_streamer_index_results_bucket_name
 }
 
 output "index_write_container" {
