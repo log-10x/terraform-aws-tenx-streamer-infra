@@ -9,9 +9,14 @@ output "query_queue_url" {
   value       = aws_sqs_queue.tenx_query_queue.url
 }
 
-output "pipeline_queue_url" {
-  description = "The URL of the pipeline SQS queue (for tenx.quarkus.pipeline.queue.url)"
-  value       = aws_sqs_queue.tenx_pipeline_queue.url
+output "subquery_queue_url" {
+  description = "The URL of the sub-query SQS queue (for tenx.quarkus.subquery.queue.url)"
+  value       = aws_sqs_queue.tenx_subquery_queue.url
+}
+
+output "stream_queue_url" {
+  description = "The URL of the stream SQS queue (for tenx.quarkus.stream.queue.url)"
+  value       = aws_sqs_queue.tenx_stream_queue.url
 }
 
 # S3 Bucket Names - used for application configuration and reference
