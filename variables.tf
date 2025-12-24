@@ -16,10 +16,16 @@ variable "tenx_streamer_query_queue_name" {
   default     = "my-query-queue"
 }
 
-variable "tenx_streamer_pipeline_queue_name" {
-  description = "Set the name of the pipeline SQS queue, defaults to 'my-pipeline-queue'"
+variable "tenx_streamer_subquery_queue_name" {
+  description = "Set the name of the sub-query SQS queue, defaults to 'my-subquery-queue'"
   type        = string
-  default     = "my-pipeline-queue"
+  default     = "my-subquery-queue"
+}
+
+variable "tenx_streamer_stream_queue_name" {
+  description = "Set the name of the stream SQS queue, defaults to 'my-stream-queue'"
+  type        = string
+  default     = "my-stream-queue"
 }
 
 variable "tenx_streamer_queue_visibility_timeout" {
