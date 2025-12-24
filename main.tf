@@ -1,7 +1,7 @@
 locals {
   tags = merge(var.tenx_streamer_user_supplied_tags, {
     terraform-module         = "tenx-streamer-infra"
-    terraform-module-version = "v0.2.1"
+    terraform-module-version = "v0.3.0"
     managed-by               = "tenx-terraform"
   })
 
@@ -36,8 +36,20 @@ resource "aws_sqs_queue" "tenx_query_queue" {
   tags = local.tags
 }
 
-resource "aws_sqs_queue" "tenx_pipeline_queue" {
-  name = var.tenx_streamer_pipeline_queue_name
+resource "aws_sqs_queue" "tenx_subquery_queue" {
+  name = var.tenx_streamer_subquery_queue_name
+
+  visibility_timeout_seconds = var.tenx_streamer_queue_visibility_timeout
+  message_retention_seconds  = var.tenx_streamer_queue_message_retention
+  max_message_size           = var.tenx_streamer_queue_max_message_size
+  delay_seconds              = var.tenx_streamer_queue_delay_seconds
+  receive_wait_time_seconds  = var.tenx_streamer_queue_receive_wait_time
+
+  tags = local.tags
+}
+
+resource "aws_sqs_queue" "tenx_stream_queue" {
+  name = var.tenx_streamer_stream_queue_name
 
   visibility_timeout_seconds = var.tenx_streamer_queue_visibility_timeout
   message_retention_seconds  = var.tenx_streamer_queue_message_retention
