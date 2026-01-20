@@ -1,7 +1,7 @@
 locals {
   tags = merge(var.tenx_streamer_user_supplied_tags, {
     terraform-module         = "tenx-streamer-infra"
-    terraform-module-version = "v0.3.0"
+    terraform-module-version = "v0.3.1"
     managed-by               = "tenx-terraform"
   })
 
@@ -101,9 +101,10 @@ resource "aws_sqs_queue_policy" "index_queue_s3_policy" {
 }
 
 # S3 Bucket Notification to send events directly to SQS
+# Always created - the S3→SQS trigger is core to streamer operation
+# regardless of whether we create the bucket or user brings their own
 resource "aws_s3_bucket_notification" "index_trigger" {
-  count  = var.tenx_streamer_create_index_source_bucket ? 1 : 0
-  bucket = aws_s3_bucket.index_source[0].id
+  bucket = var.tenx_streamer_index_source_bucket_name
 
   queue {
     queue_arn     = aws_sqs_queue.tenx_index_queue.arn
