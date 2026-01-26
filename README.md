@@ -170,3 +170,27 @@ Set the `tenx.quarkus.index.write.container` property to specify where indexing 
 - **Use existing buckets**: Set `tenx_streamer_create_index_source_bucket` or `tenx_streamer_create_index_results_bucket` to `false`
 
 - For additional details, refer to the module's page on the [Terraform Cloud Registry](https://registry.terraform.io/).
+
+## License
+
+This repository is licensed under the [Apache License 2.0](LICENSE).
+
+### Important: Log10x Product License Required
+
+This repository contains infrastructure tooling for Log10x Streamer. While the Terraform module
+itself is open source, **using Log10x requires a commercial license**.
+
+| Component | License |
+|-----------|---------|
+| This repository (Terraform module) | Apache 2.0 (open source) |
+| Log10x engine and runtime | Commercial license required |
+
+**What this means:**
+- You can freely use, modify, and distribute this Terraform module
+- The Log10x software that consumes this infrastructure requires a paid subscription
+- A valid Log10x API key is required to run the deployed software
+
+**Get Started:**
+- [Log10x Pricing](https://log10x.com/pricing)
+- [Documentation](https://doc.log10x.com)
+- [Contact Sales](mailto:sales@log10x.com)
