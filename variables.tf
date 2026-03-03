@@ -100,3 +100,16 @@ variable "tenx_streamer_index_trigger_suffix" {
   type        = string
   default     = ".log"
 }
+
+# CloudWatch Logs Configuration
+variable "tenx_streamer_query_log_group_name" {
+  description = "Name of the CloudWatch Logs log group for query event logging. If empty, no log group is created and query event logging is disabled."
+  type        = string
+  default     = ""
+}
+
+variable "tenx_streamer_query_log_group_retention" {
+  description = "Number of days to retain query event logs in CloudWatch Logs, defaults to 14"
+  type        = number
+  default     = 7
+}

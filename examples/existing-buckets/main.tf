@@ -33,7 +33,8 @@ module "tenx_streamer_infra" {
   # Queue configuration
   tenx_streamer_index_queue_name    = "my-index-queue"
   tenx_streamer_query_queue_name    = "my-query-queue"
-  tenx_streamer_pipeline_queue_name = "my-pipeline-queue"
+  tenx_streamer_subquery_queue_name = "my-subquery-queue"
+  tenx_streamer_stream_queue_name   = "my-stream-queue"
 
   # Use existing S3 buckets - do NOT create new ones
   tenx_streamer_create_index_source_bucket  = false
@@ -46,6 +47,10 @@ module "tenx_streamer_infra" {
   # Custom trigger configuration
   tenx_streamer_index_trigger_prefix = "data/"
   tenx_streamer_index_trigger_suffix = ".log"
+
+  # CloudWatch Logs for query event logging
+  tenx_streamer_query_log_group_name      = "/tenx/my-streamer/query"
+  tenx_streamer_query_log_group_retention = 1
 
   tenx_streamer_user_supplied_tags = {
     Environment = "staging"
@@ -64,9 +69,14 @@ output "query_queue_url" {
   value       = module.tenx_streamer_infra.query_queue_url
 }
 
-output "pipeline_queue_url" {
-  description = "Pipeline queue URL"
-  value       = module.tenx_streamer_infra.pipeline_queue_url
+output "subquery_queue_url" {
+  description = "Sub-query queue URL"
+  value       = module.tenx_streamer_infra.subquery_queue_url
+}
+
+output "stream_queue_url" {
+  description = "Stream queue URL"
+  value       = module.tenx_streamer_infra.stream_queue_url
 }
 
 output "index_write_container" {

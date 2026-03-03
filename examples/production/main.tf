@@ -27,12 +27,13 @@ module "tenx_streamer_infra" {
   # Custom queue names
   tenx_streamer_index_queue_name    = "prod-tenx-index-queue"
   tenx_streamer_query_queue_name    = "prod-tenx-query-queue"
-  tenx_streamer_pipeline_queue_name = "prod-tenx-pipeline-queue"
+  tenx_streamer_subquery_queue_name = "prod-tenx-subquery-queue"
+  tenx_streamer_stream_queue_name   = "prod-tenx-stream-queue"
 
   # Queue configuration for production
-  tenx_streamer_queue_visibility_timeout = 60       # 1 minute
-  tenx_streamer_queue_message_retention  = 1209600  # 14 days
-  tenx_streamer_queue_receive_wait_time  = 20       # Long polling
+  tenx_streamer_queue_visibility_timeout = 60      # 1 minute
+  tenx_streamer_queue_message_retention  = 1209600 # 14 days
+  tenx_streamer_queue_receive_wait_time  = 20      # Long polling
 
   # S3 configuration - separate buckets for source and results
   tenx_streamer_index_source_bucket_name  = "prod-logs-bucket"
@@ -42,6 +43,10 @@ module "tenx_streamer_infra" {
   # Trigger indexing only for JSON logs in the logs/ directory
   tenx_streamer_index_trigger_prefix = "logs/"
   tenx_streamer_index_trigger_suffix = ".json"
+
+  # CloudWatch Logs for query event logging
+  tenx_streamer_query_log_group_name      = "/tenx/prod/streamer/query"
+  tenx_streamer_query_log_group_retention = 14
 
   # Production tags
   tenx_streamer_user_supplied_tags = {
@@ -59,7 +64,8 @@ output "queue_urls" {
   value = {
     index    = module.tenx_streamer_infra.index_queue_url
     query    = module.tenx_streamer_infra.query_queue_url
-    pipeline = module.tenx_streamer_infra.pipeline_queue_url
+    subquery = module.tenx_streamer_infra.subquery_queue_url
+    stream   = module.tenx_streamer_infra.stream_queue_url
   }
 }
 
@@ -73,5 +79,13 @@ output "bucket_names" {
   value = {
     source  = module.tenx_streamer_infra.index_source_bucket_name
     results = module.tenx_streamer_infra.index_results_bucket_name
+  }
+}
+
+output "query_log_group" {
+  description = "CloudWatch Logs log group for query events"
+  value = {
+    name = module.tenx_streamer_infra.query_log_group_name
+    arn  = module.tenx_streamer_infra.query_log_group_arn
   }
 }
