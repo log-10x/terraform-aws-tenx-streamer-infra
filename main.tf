@@ -1,7 +1,7 @@
 locals {
   tags = merge(var.tenx_streamer_user_supplied_tags, {
     terraform-module         = "tenx-streamer-infra"
-    terraform-module-version = "v0.3.2"
+    terraform-module-version = "v0.4.0"
     managed-by               = "tenx-terraform"
   })
 
@@ -114,4 +114,14 @@ resource "aws_s3_bucket_notification" "index_trigger" {
   }
 
   depends_on = [aws_sqs_queue_policy.index_queue_s3_policy]
+}
+
+# CloudWatch Logs for Query Event Logging
+# Only created when a log group name is provided
+resource "aws_cloudwatch_log_group" "query_log_group" {
+  count             = var.tenx_streamer_query_log_group_name != "" ? 1 : 0
+  name              = var.tenx_streamer_query_log_group_name
+  retention_in_days = var.tenx_streamer_query_log_group_retention
+
+  tags = local.tags
 }

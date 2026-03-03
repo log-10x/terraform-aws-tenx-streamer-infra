@@ -21,8 +21,12 @@ module "tenx_streamer_infra" {
   source  = "log-10x/tenx-streamer-infra/aws"
   version = "~> 0.1"
 
-  # Use default queue names (my-index-queue, my-query-queue, my-pipeline-queue)
+  # Use default queue names (my-index-queue, my-query-queue, my-subquery-queue, my-stream-queue)
   # Use default S3 bucket configuration (creates my-tenx-index-bucket)
+
+  # CloudWatch Logs for query event logging
+  tenx_streamer_query_log_group_name      = "/tenx/my-streamer/query"
+  tenx_streamer_query_log_group_retention = 1
 
   tenx_streamer_user_supplied_tags = {
     Environment = "development"
@@ -41,9 +45,14 @@ output "query_queue_url" {
   value       = module.tenx_streamer_infra.query_queue_url
 }
 
-output "pipeline_queue_url" {
-  description = "Use this for TENX_QUARKUS_PIPELINE_QUEUE_URL"
-  value       = module.tenx_streamer_infra.pipeline_queue_url
+output "subquery_queue_url" {
+  description = "Use this for TENX_QUARKUS_SUBQUERY_QUEUE_URL"
+  value       = module.tenx_streamer_infra.subquery_queue_url
+}
+
+output "stream_queue_url" {
+  description = "Use this for TENX_QUARKUS_STREAM_QUEUE_URL"
+  value       = module.tenx_streamer_infra.stream_queue_url
 }
 
 output "index_write_container" {

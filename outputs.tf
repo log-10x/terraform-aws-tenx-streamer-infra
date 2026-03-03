@@ -34,3 +34,14 @@ output "index_write_container" {
   description = "The full path for indexing results (bucket + path) - used for tenx.quarkus.index.write.container"
   value       = local.index_write_container
 }
+
+# CloudWatch Logs - used for query event logging
+output "query_log_group_name" {
+  description = "The name of the CloudWatch Logs log group for query event logging (empty if disabled)"
+  value       = var.tenx_streamer_query_log_group_name
+}
+
+output "query_log_group_arn" {
+  description = "The ARN of the CloudWatch Logs log group for query event logging (empty if disabled)"
+  value       = length(aws_cloudwatch_log_group.query_log_group) > 0 ? aws_cloudwatch_log_group.query_log_group[0].arn : ""
+}

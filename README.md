@@ -1,13 +1,14 @@
 # 10x AWS Streamer Terraform Module
 
-This Terraform module simplifies the deployment of AWS resources for the 10x streamer infrastructure. It deploys three SQS queues that mirror the queues consumed by the run-quarkus server: index, query, and pipeline queues.
+This Terraform module simplifies the deployment of AWS resources for the 10x streamer infrastructure. It deploys four SQS queues that mirror the queues consumed by the run-quarkus server: index, query, sub-query, and stream queues.
 
 ## Features
 
-- Deploys three AWS SQS queues for the 10x streamer (index, query, and pipeline).
+- Deploys four AWS SQS queues for the 10x streamer (index, query, sub-query, and stream).
 - Configurable queue settings including visibility timeout, message retention, and message size limits.
 - Long polling enabled by default (20 seconds) to match run-quarkus SqsConsumer configuration.
 - **Automatic S3-triggered indexing**: Creates S3 buckets and sends S3 event notifications directly to SQS when files are uploaded.
+- **CloudWatch Logs**: Optionally creates a CloudWatch Logs log group for query event logging (progress, diagnostics, errors).
 - Supports user-defined tags for resource management.
 
 ## Prerequisites
@@ -27,7 +28,8 @@ module "tenx-streamer-infra" {
 
   tenx_streamer_index_queue_name    = "my-index-queue"
   tenx_streamer_query_queue_name    = "my-query-queue"
-  tenx_streamer_pipeline_queue_name = "my-pipeline-queue"
+  tenx_streamer_subquery_queue_name = "my-subquery-queue"
+  tenx_streamer_stream_queue_name   = "my-stream-queue"
 }
 ```
 
@@ -50,7 +52,8 @@ The following input variables are supported:
 | `tenx_streamer_user_supplied_tags`  | Tags to apply to all generated resources                                | `map(string)` | `{}`                | No       |
 | `tenx_streamer_index_queue_name`    | Name of the index SQS queue                                             | `string`      | `my-index-queue`    | No       |
 | `tenx_streamer_query_queue_name`    | Name of the query SQS queue                                             | `string`      | `my-query-queue`    | No       |
-| `tenx_streamer_pipeline_queue_name` | Name of the pipeline SQS queue                                          | `string`      | `my-pipeline-queue` | No       |
+| `tenx_streamer_subquery_queue_name` | Name of the sub-query SQS queue                                         | `string`      | `my-subquery-queue` | No       |
+| `tenx_streamer_stream_queue_name`   | Name of the stream SQS queue                                            | `string`      | `my-stream-queue`   | No       |
 | `tenx_streamer_visibility_timeout`  | Visibility timeout for all queues in seconds                            | `number`      | `30`                | No       |
 | `tenx_streamer_message_retention`   | Number of seconds Amazon SQS retains a message for all queues           | `number`      | `345600` (4 days)   | No       |
 | `tenx_streamer_max_message_size`    | Maximum bytes a message can contain before rejection for all queues     | `number`      | `262144` (256 KB)   | No       |
@@ -63,6 +66,8 @@ The following input variables are supported:
 | `tenx_streamer_index_results_path` | Path within results bucket where indexing results will be stored | `string` | `indexing-results/` | No |
 | `tenx_streamer_index_trigger_prefix` | S3 object key prefix filter for triggering indexing | `string` | `app/` | No |
 | `tenx_streamer_index_trigger_suffix` | S3 object key suffix filter for triggering indexing | `string` | `.log` | No |
+| `tenx_streamer_query_log_group_name` | Name of the CloudWatch Logs log group for query event logging. If empty, no log group is created. | `string` | `""` | No |
+| `tenx_streamer_query_log_group_retention` | Number of days to retain query event logs in CloudWatch Logs | `number` | `7` | No |
 
 ## Outputs
 
@@ -70,12 +75,15 @@ The module provides the following outputs for application configuration:
 
 | Name                        | Description                                                      | Used For |
 |-----------------------------|------------------------------------------------------------------|----------|
-| `index_queue_url`           | Full URL of the index SQS queue                                  | `tenx.quarkus.index.queue.url` |
-| `query_queue_url`           | Full URL of the query SQS queue                                  | `tenx.quarkus.query.queue.url` |
-| `pipeline_queue_url`        | Full URL of the pipeline SQS queue                               | `tenx.quarkus.pipeline.queue.url` |
+| `index_queue_url`           | Full URL of the index SQS queue                                  | `TENX_QUARKUS_INDEX_QUEUE_URL` |
+| `query_queue_url`           | Full URL of the query SQS queue                                  | `TENX_QUARKUS_QUERY_QUEUE_URL` |
+| `subquery_queue_url`        | Full URL of the sub-query SQS queue                              | `TENX_QUARKUS_SUBQUERY_QUEUE_URL` |
+| `stream_queue_url`          | Full URL of the stream SQS queue                                 | `TENX_QUARKUS_STREAM_QUEUE_URL` |
 | `index_source_bucket_name`  | Name of the S3 bucket for source files to be indexed            | Reference/Documentation |
 | `index_results_bucket_name` | Name of the S3 bucket for indexing results                       | Reference/Documentation |
 | `index_write_container`     | Full path for indexing results (bucket + path)                   | `tenx.quarkus.index.write.container` |
+| `query_log_group_name`      | Name of the CloudWatch Logs log group for query events (empty if disabled) | `TENX_QUERY_LOG_GROUP` |
+| `query_log_group_arn`       | ARN of the CloudWatch Logs log group for query events (empty if disabled) | IAM policy configuration |
 
 ## Example Configuration
 
@@ -89,7 +97,8 @@ module "tenx-streamer-infra" {
   # Queue Configuration
   tenx_streamer_index_queue_name    = "my-custom-index-queue"
   tenx_streamer_query_queue_name    = "my-custom-query-queue"
-  tenx_streamer_pipeline_queue_name = "my-custom-pipeline-queue"
+  tenx_streamer_subquery_queue_name = "my-custom-subquery-queue"
+  tenx_streamer_stream_queue_name   = "my-custom-stream-queue"
 
   tenx_streamer_queue_visibility_timeout = 60
   tenx_streamer_queue_message_retention  = 604800  # 7 days
@@ -102,6 +111,10 @@ module "tenx-streamer-infra" {
   tenx_streamer_index_trigger_prefix       = "logs/"
   tenx_streamer_index_trigger_suffix       = ".log"
 
+  # CloudWatch Logs for query event logging (optional)
+  tenx_streamer_query_log_group_name      = "/tenx/prod/streamer/query"
+  tenx_streamer_query_log_group_retention = 30
+
   tenx_streamer_user_supplied_tags = {
     Environment = "Production"
     Project     = "DataStreaming"
@@ -111,16 +124,18 @@ module "tenx-streamer-infra" {
 
 ## Module Details
 
-- **SQS Queues**: Creates three standard SQS queues that mirror the queues consumed by run-quarkus:
+- **SQS Queues**: Creates four standard SQS queues that mirror the queues consumed by run-quarkus:
   - **Index Queue**: Processes index/indexing requests via `IndexSqsConsumer`
   - **Query Queue**: Processes query requests via `QuerySqsConsumer`
-  - **Pipeline Queue**: Processes generic pipeline launch requests via `PipelineSqsConsumer`
+  - **Sub-Query Queue**: Processes sub-query (scan) requests dispatched by query coordinators
+  - **Stream Queue**: Processes stream requests that fetch and transform matching events
 - **S3 Automatic Indexing**: When files matching the configured prefix/suffix are uploaded to the source bucket:
   1. S3 sends an event notification directly to the index SQS queue
   2. `IndexSqsConsumer` in run-quarkus receives the S3 event notification
   3. The consumer parses the S3 event and converts it to an `IndexRequest`
   4. Indexing proceeds with the extracted bucket/object information
 - **Direct S3 → SQS Integration**: No Lambda required - S3 sends events directly to SQS with proper IAM permissions
+- **CloudWatch Logs**: Optionally creates a CloudWatch Logs log group for query event logging. When configured, query coordinators and stream workers write progress, diagnostic, and error events to this log group. Each query creates log streams named `{queryID}/{workerID}`.
 - **Bucket Management**: Optionally creates S3 buckets for source files and indexing results, or uses existing buckets
 - **Tags**: User-supplied tags are merged with default tags (`terraform-module`, `terraform-module-version`, `managed-by`) for resource identification.
 - **Configurable Parameters**: Supports customization of queue behavior including visibility timeout, message retention, and long polling settings.
@@ -128,12 +143,13 @@ module "tenx-streamer-infra" {
 
 ## Notes
 
-- Queue names default to match the LocalStack development setup: `my-index-queue`, `my-query-queue`, `my-pipeline-queue`.
-- All three queues share the same configuration parameters (visibility timeout, retention, etc.) by design.
+- Queue names default to match the LocalStack development setup: `my-index-queue`, `my-query-queue`, `my-subquery-queue`, `my-stream-queue`.
+- All four queues share the same configuration parameters (visibility timeout, retention, etc.) by design.
 - The queue URLs should be configured in the run-quarkus application using environment variables:
   - `TENX_QUARKUS_INDEX_QUEUE_URL`
   - `TENX_QUARKUS_QUERY_QUEUE_URL`
-  - `TENX_QUARKUS_PIPELINE_QUEUE_URL`
+  - `TENX_QUARKUS_SUBQUERY_QUEUE_URL`
+  - `TENX_QUARKUS_STREAM_QUEUE_URL`
 
 ### S3 Indexing Workflow
 
