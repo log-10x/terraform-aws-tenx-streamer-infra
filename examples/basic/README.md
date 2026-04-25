@@ -1,6 +1,6 @@
 # Basic Example
 
-This example demonstrates the simplest way to deploy the 10x streamer infrastructure with default settings.
+This example demonstrates the simplest way to deploy the 10x retriever infrastructure with default settings.
 
 ## What This Creates
 

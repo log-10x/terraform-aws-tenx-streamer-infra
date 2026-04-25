@@ -1,10 +1,10 @@
-# 10x AWS Streamer Terraform Module
+# 10x AWS Retriever Terraform Module
 
-This Terraform module simplifies the deployment of AWS resources for the 10x streamer infrastructure. It deploys four SQS queues that mirror the queues consumed by the run-quarkus server: index, query, sub-query, and stream queues.
+This Terraform module simplifies the deployment of AWS resources for the 10x retriever infrastructure. It deploys four SQS queues that mirror the queues consumed by the run-quarkus server: index, query, sub-query, and stream queues.
 
 ## Features
 
-- Deploys four AWS SQS queues for the 10x streamer (index, query, sub-query, and stream).
+- Deploys four AWS SQS queues for the 10x retriever (index, query, sub-query, and stream).
 - Configurable queue settings including visibility timeout, message retention, and message size limits.
 - Long polling enabled by default (20 seconds) to match run-quarkus SqsConsumer configuration.
 - **Automatic S3-triggered indexing**: Creates S3 buckets and sends S3 event notifications directly to SQS when files are uploaded.
@@ -22,14 +22,14 @@ This Terraform module simplifies the deployment of AWS resources for the 10x str
 This module is published on Terraform Cloud and can be used directly in your Terraform configuration:
 
 ```hcl
-module "tenx-streamer-infra" {
-  source  = "log-10x/tenx-streamer-infra/aws"
+module "tenx-retriever-infra" {
+  source  = "log-10x/tenx-retriever-infra/aws"
   version = "0.1.0"
 
-  tenx_streamer_index_queue_name    = "my-index-queue"
-  tenx_streamer_query_queue_name    = "my-query-queue"
-  tenx_streamer_subquery_queue_name = "my-subquery-queue"
-  tenx_streamer_stream_queue_name   = "my-stream-queue"
+  tenx_retriever_index_queue_name    = "my-index-queue"
+  tenx_retriever_query_queue_name    = "my-query-queue"
+  tenx_retriever_subquery_queue_name = "my-subquery-queue"
+  tenx_retriever_stream_queue_name   = "my-stream-queue"
 }
 ```
 
@@ -49,25 +49,25 @@ The following input variables are supported:
 
 | Name                                | Description                                                              | Type          | Default             | Required |
 |-------------------------------------|--------------------------------------------------------------------------|---------------|---------------------|----------|
-| `tenx_streamer_user_supplied_tags`  | Tags to apply to all generated resources                                | `map(string)` | `{}`                | No       |
-| `tenx_streamer_index_queue_name`    | Name of the index SQS queue                                             | `string`      | `my-index-queue`    | No       |
-| `tenx_streamer_query_queue_name`    | Name of the query SQS queue                                             | `string`      | `my-query-queue`    | No       |
-| `tenx_streamer_subquery_queue_name` | Name of the sub-query SQS queue                                         | `string`      | `my-subquery-queue` | No       |
-| `tenx_streamer_stream_queue_name`   | Name of the stream SQS queue                                            | `string`      | `my-stream-queue`   | No       |
-| `tenx_streamer_visibility_timeout`  | Visibility timeout for all queues in seconds                            | `number`      | `30`                | No       |
-| `tenx_streamer_message_retention`   | Number of seconds Amazon SQS retains a message for all queues           | `number`      | `345600` (4 days)   | No       |
-| `tenx_streamer_max_message_size`    | Maximum bytes a message can contain before rejection for all queues     | `number`      | `262144` (256 KB)   | No       |
-| `tenx_streamer_queue_delay_seconds`       | Time in seconds that delivery of all messages will be delayed           | `number`      | `0`                 | No       |
-| `tenx_streamer_queue_receive_wait_time`   | Time for which a ReceiveMessage call will wait (long polling) in seconds | `number`     | `20`                | No       |
-| `tenx_streamer_create_index_source_bucket` | Whether to create the S3 bucket for source files to be indexed | `bool` | `true` | No |
-| `tenx_streamer_index_source_bucket_name` | Name of the S3 bucket for source files to be indexed | `string` | `my-tenx-index-bucket` | No |
-| `tenx_streamer_create_index_results_bucket` | Whether to create the S3 bucket for indexing results | `bool` | `true` | No |
-| `tenx_streamer_index_results_bucket_name` | Name of the S3 bucket for indexing results | `string` | `my-tenx-index-bucket` | No |
-| `tenx_streamer_index_results_path` | Path within results bucket where indexing results will be stored | `string` | `indexing-results/` | No |
-| `tenx_streamer_index_trigger_prefix` | S3 object key prefix filter for triggering indexing | `string` | `app/` | No |
-| `tenx_streamer_index_trigger_suffix` | S3 object key suffix filter for triggering indexing | `string` | `.log` | No |
-| `tenx_streamer_query_log_group_name` | Name of the CloudWatch Logs log group for query event logging. If empty, no log group is created. | `string` | `""` | No |
-| `tenx_streamer_query_log_group_retention` | Number of days to retain query event logs in CloudWatch Logs | `number` | `7` | No |
+| `tenx_retriever_user_supplied_tags`  | Tags to apply to all generated resources                                | `map(string)` | `{}`                | No       |
+| `tenx_retriever_index_queue_name`    | Name of the index SQS queue                                             | `string`      | `my-index-queue`    | No       |
+| `tenx_retriever_query_queue_name`    | Name of the query SQS queue                                             | `string`      | `my-query-queue`    | No       |
+| `tenx_retriever_subquery_queue_name` | Name of the sub-query SQS queue                                         | `string`      | `my-subquery-queue` | No       |
+| `tenx_retriever_stream_queue_name`   | Name of the stream SQS queue                                            | `string`      | `my-stream-queue`   | No       |
+| `tenx_retriever_visibility_timeout`  | Visibility timeout for all queues in seconds                            | `number`      | `30`                | No       |
+| `tenx_retriever_message_retention`   | Number of seconds Amazon SQS retains a message for all queues           | `number`      | `345600` (4 days)   | No       |
+| `tenx_retriever_max_message_size`    | Maximum bytes a message can contain before rejection for all queues     | `number`      | `262144` (256 KB)   | No       |
+| `tenx_retriever_queue_delay_seconds`       | Time in seconds that delivery of all messages will be delayed           | `number`      | `0`                 | No       |
+| `tenx_retriever_queue_receive_wait_time`   | Time for which a ReceiveMessage call will wait (long polling) in seconds | `number`     | `20`                | No       |
+| `tenx_retriever_create_index_source_bucket` | Whether to create the S3 bucket for source files to be indexed | `bool` | `true` | No |
+| `tenx_retriever_index_source_bucket_name` | Name of the S3 bucket for source files to be indexed | `string` | `my-tenx-index-bucket` | No |
+| `tenx_retriever_create_index_results_bucket` | Whether to create the S3 bucket for indexing results | `bool` | `true` | No |
+| `tenx_retriever_index_results_bucket_name` | Name of the S3 bucket for indexing results | `string` | `my-tenx-index-bucket` | No |
+| `tenx_retriever_index_results_path` | Path within results bucket where indexing results will be stored | `string` | `indexing-results/` | No |
+| `tenx_retriever_index_trigger_prefix` | S3 object key prefix filter for triggering indexing | `string` | `app/` | No |
+| `tenx_retriever_index_trigger_suffix` | S3 object key suffix filter for triggering indexing | `string` | `.log` | No |
+| `tenx_retriever_query_log_group_name` | Name of the CloudWatch Logs log group for query event logging. If empty, no log group is created. | `string` | `""` | No |
+| `tenx_retriever_query_log_group_retention` | Number of days to retain query event logs in CloudWatch Logs | `number` | `7` | No |
 
 ## Outputs
 
@@ -90,32 +90,32 @@ The module provides the following outputs for application configuration:
 Below is an example of how to use this module with custom settings:
 
 ```hcl
-module "tenx-streamer-infra" {
-  source  = "log-10x/tenx-streamer-infra/aws"
+module "tenx-retriever-infra" {
+  source  = "log-10x/tenx-retriever-infra/aws"
   version = "0.1.0"
 
   # Queue Configuration
-  tenx_streamer_index_queue_name    = "my-custom-index-queue"
-  tenx_streamer_query_queue_name    = "my-custom-query-queue"
-  tenx_streamer_subquery_queue_name = "my-custom-subquery-queue"
-  tenx_streamer_stream_queue_name   = "my-custom-stream-queue"
+  tenx_retriever_index_queue_name    = "my-custom-index-queue"
+  tenx_retriever_query_queue_name    = "my-custom-query-queue"
+  tenx_retriever_subquery_queue_name = "my-custom-subquery-queue"
+  tenx_retriever_stream_queue_name   = "my-custom-stream-queue"
 
-  tenx_streamer_queue_visibility_timeout = 60
-  tenx_streamer_queue_message_retention  = 604800  # 7 days
-  tenx_streamer_queue_receive_wait_time  = 20      # Long polling (default)
+  tenx_retriever_queue_visibility_timeout = 60
+  tenx_retriever_queue_message_retention  = 604800  # 7 days
+  tenx_retriever_queue_receive_wait_time  = 20      # Long polling (default)
 
   # S3 Indexing Configuration
-  tenx_streamer_index_source_bucket_name   = "my-logs-bucket"
-  tenx_streamer_index_results_bucket_name  = "my-index-results-bucket"
-  tenx_streamer_index_results_path         = "processed/"
-  tenx_streamer_index_trigger_prefix       = "logs/"
-  tenx_streamer_index_trigger_suffix       = ".log"
+  tenx_retriever_index_source_bucket_name   = "my-logs-bucket"
+  tenx_retriever_index_results_bucket_name  = "my-index-results-bucket"
+  tenx_retriever_index_results_path         = "processed/"
+  tenx_retriever_index_trigger_prefix       = "logs/"
+  tenx_retriever_index_trigger_suffix       = ".log"
 
   # CloudWatch Logs for query event logging (optional)
-  tenx_streamer_query_log_group_name      = "/tenx/prod/streamer/query"
-  tenx_streamer_query_log_group_retention = 30
+  tenx_retriever_query_log_group_name      = "/tenx/prod/retriever/query"
+  tenx_retriever_query_log_group_retention = 30
 
-  tenx_streamer_user_supplied_tags = {
+  tenx_retriever_user_supplied_tags = {
     Environment = "Production"
     Project     = "DataStreaming"
   }
@@ -183,7 +183,7 @@ Set the `tenx.quarkus.index.write.container` property to specify where indexing 
 
 - **Same bucket for source and results**: Set both bucket names to the same value (default behavior)
 - **Separate buckets**: Provide different names for source and results buckets
-- **Use existing buckets**: Set `tenx_streamer_create_index_source_bucket` or `tenx_streamer_create_index_results_bucket` to `false`
+- **Use existing buckets**: Set `tenx_retriever_create_index_source_bucket` or `tenx_retriever_create_index_results_bucket` to `false`
 
 - For additional details, refer to the module's page on the [Terraform Cloud Registry](https://registry.terraform.io/).
 
@@ -193,7 +193,7 @@ This repository is licensed under the [Apache License 2.0](LICENSE).
 
 ### Important: Log10x Product License Required
 
-This repository contains infrastructure tooling for Log10x Streamer. While the Terraform module
+This repository contains infrastructure tooling for Log10x Retriever. While the Terraform module
 itself is open source, **using Log10x requires a commercial license**.
 
 | Component | License |

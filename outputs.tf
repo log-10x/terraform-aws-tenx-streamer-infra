@@ -22,12 +22,12 @@ output "stream_queue_url" {
 # S3 Bucket Names - used for application configuration and reference
 output "index_source_bucket_name" {
   description = "The name of the S3 bucket for source files to be indexed"
-  value       = var.tenx_streamer_index_source_bucket_name
+  value       = var.tenx_retriever_index_source_bucket_name
 }
 
 output "index_results_bucket_name" {
   description = "The name of the S3 bucket for indexing results"
-  value       = var.tenx_streamer_index_results_bucket_name
+  value       = var.tenx_retriever_index_results_bucket_name
 }
 
 output "index_write_container" {
@@ -38,7 +38,7 @@ output "index_write_container" {
 # CloudWatch Logs - used for query event logging
 output "query_log_group_name" {
   description = "The name of the CloudWatch Logs log group for query event logging (empty if disabled)"
-  value       = var.tenx_streamer_query_log_group_name
+  value       = var.tenx_retriever_query_log_group_name
 }
 
 output "query_log_group_arn" {
