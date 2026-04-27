@@ -1,4 +1,28 @@
-# 10x AWS Streamer Terraform Module
+# 10x AWS Streamer Terraform Module — DEPRECATED
+
+> ## ⚠️ This module has been renamed and is no longer maintained
+>
+> The Log10x **streamer** product has been renamed to **retriever**. This repository is archived as a tombstone.
+>
+> **New canonical module:** [`log-10x/tenx-retriever-infra/aws`](https://registry.terraform.io/modules/log-10x/tenx-retriever-infra/aws/latest)
+> **New source repository:** https://github.com/log-10x/terraform-aws-tenx-retriever-infra
+>
+> ### Migration
+>
+> Replace your `source` line:
+>
+> ```hcl
+> module "tenx_retriever_infra" {
+> -  source  = "log-10x/tenx-streamer-infra/aws"
+> +  source  = "log-10x/tenx-retriever-infra/aws"
+>   version = ">= 0.9.0"
+>   # variables: tenx_streamer_* → tenx_retriever_*
+> }
+> ```
+>
+> Existing pins to `log-10x/tenx-streamer-infra/aws` versions `<= 0.4.0` continue to resolve from the registry, but no new versions will be published under the streamer name. Migrate to retriever for any new features or fixes.
+
+---
 
 This Terraform module simplifies the deployment of AWS resources for the 10x streamer infrastructure. It deploys four SQS queues that mirror the queues consumed by the run-quarkus server: index, query, sub-query, and stream queues.
 
